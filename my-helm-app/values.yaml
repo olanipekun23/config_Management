@@ -5,6 +5,16 @@ image:
   tag: "latest"
   pullPolicy: IfNotPresent
 
+serviceAccount:
+  create: false
+  name: ""
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
 service:
   type: ClusterIP
   port: 80
