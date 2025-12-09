@@ -3,3 +3,5 @@ resources:
 
 namePrefix: prod-
 
+patches:
+  - path: patch.yaml

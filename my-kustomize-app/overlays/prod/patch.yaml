@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kustomize-demo
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: nginx   # MUST match base container name
+          image: nginx:stable
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+
