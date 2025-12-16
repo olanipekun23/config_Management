@@ -7,7 +7,7 @@ spec:
   template:
     spec:
       containers:
-        - name: nginx   # MUST match base container name
+        - name: nginx
           image: nginx:stable
           ports:
             - containerPort: 80
@@ -18,4 +18,15 @@ spec:
             requests:
               cpu: 250m
               memory: 256Mi
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret-prod
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret-prod
+                  key: db-password
 

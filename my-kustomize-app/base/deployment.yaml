@@ -17,4 +17,15 @@ spec:
           image: nginx:latest
           ports:
             - containerPort: 80
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db-user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db-password
 

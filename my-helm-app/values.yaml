@@ -1,24 +1,59 @@
-replicaCount: 1
+# Number of replicas
+replicaCount: 2
 
+# Container image configuration
 image:
   repository: nginx
-  tag: "latest"
+  tag: stable
   pullPolicy: IfNotPresent
 
-serviceAccount:
-  create: false
-  name: ""
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
-
+# Service configuration
 service:
   type: ClusterIP
   port: 80
 
+# Disable autoscaling
+autoscaling:
+  enabled: false
+
+# Vault Agent Injector Annotations
+podAnnotations:
+  vault.hashicorp.com/agent-inject: "true"
+  vault.hashicorp.com/role: "app-role"
+  vault.hashicorp.com/agent-inject-secret-db-user: "secret/data/app-secret-prod"
+  vault.hashicorp.com/agent-inject-secret-db-password: "secret/data/app-secret-prod"
+
+  vault.hashicorp.com/agent-inject-template-db-user: |
+    {{- with secret "secret/data/app-secret-prod" -}}
+    {{ .Data.data.db-user }}
+    {{- end }}
+
+  vault.hashicorp.com/agent-inject-template-db-password: |
+    {{- with secret "secret/data/app-secret-prod" -}}
+    {{ .Data.data.db-password }}
+    {{- end }}
+
+# Environment variables read from injected files
+env:
+  - name: DB_USER
+    value: "/vault/secrets/db-user"
+  - name: DB_PASSWORD
+    value: "/vault/secrets/db-password"
+
+# No service account needed
+serviceAccount:
+  create: false
+  name: ""
+
+# Ingress settings
 ingress:
   enabled: false
+
+# Resource requests and limits
+resources: {}
+
+# Node scheduling
+nodeSelector: {}
+tolerations: []
+affinity: {}
 
